@@ -342,6 +342,22 @@ The value of `b` is being coerced to the "invalid number value" `NaN` in the
 comparison operators. `NaN` is neither greater-than nor less-than any other
 value.
 
+### Switch Statements
+
+Switch statements use strict comparison.
+```js
+switch(1) {
+  case '1':
+    alert('Switch comparison is NOT strict.');
+    break;
+  case 1:
+    alert('Switch comparison is strict.');
+    break;
+  default:
+    alert('Huh?');
+}
+```
+
 ## Variables
 A variable must start with `a`-`z`, `A`-`Z`, `$`, or `_`. It can then contain
 any of those characters and the numerals `0`-`9`.
