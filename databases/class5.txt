@@ -1,0 +1,418 @@
+Database Design
+
+Transform E-R data models into relational designs
+
+M-x table-insert --> inserts a table
+
+From Relations to Entities to Tables
+
+Ex. Item Relation with 5 attributes
+Item(itemId, description, cost, listPrice, quantityOnHand)
+-->
++-----------+
+|Item       |
++-----------+
+|itemId     |
++-----------+
+|description|
++-----------+
+|cost       |
++-----------+
+|listPrice  |
++-----------+
+|quantity   |
++-----------+
+
+--> now specify data-types
++--------------+------------+
+|Item          |            |
++--------------+------------+
+|itemId        |int         |
++--------------+------------+
+|description   |varchar(100)|
++--------------+------------+
+|cost          |float       |
++--------------+------------+
+|listPrice     |float       |
++--------------+------------+
+|quantityOnHand|int         |
++--------------+------------+
+
+Transitioning from a Data Model to a Database
+create a table for each entity
+table - has a descriptive name and a set of attributes that together describe the entity
+specify a primary key
+specify column properties
+--> data type, null status, default values (if any), data constraints (if any)
+relation is then analyzed using normalization rules
+as normalization issues arise the initial design may need to be modified
+
+Normalization Review: Modification Anomalies
+tables not normalized are susceptible to experiencing modification anomalies
+insertion problems - difficulties inserting data into a relation
+update problems - difficulties modifying data in a relation
+deletion problems - difficulties deleting data from a relation
+
+Ex. Modification Anomalies
++----------+------------+----------+----------+----------+----------+
+|customerId|customerName|carId     |year      |make      |model     |
++----------+------------+----------+----------+----------+----------+
+|1         |Penny       |102       |2003      |Volkswagen|Golf      |
++----------+------------+----------+----------+----------+----------+
+|2         |Raj         |101       |2014      |BMW       |550i      |
++----------+------------+----------+----------+----------+----------+
+|3         |Leonard     |103       |2010      |Nissan    |Sentra    |
++----------+------------+----------+----------+----------+----------+
+|          |            |          |          |          |          |
++----------+------------+----------+----------+----------+----------+
+
+Deletion Anomaly: delete Leonard
+--> I will lose all record of a 2010 Nissan Sentra
+
+Insertion Anomaly: insert Sheldon
+--> Sheldon does not drive
+--> lots of missing value in our list --> waste of space
+--> later: Sheldon decides to drive, and ends up driving 2003 Volkswagen Golf
+--> this is susceptible to spelling mistakes; moreover it is redundant
+
+Update Anomaly: Change Volkswagen carId 102 to 100
+--> Sheldon's carId may not be updated --> problematic
+
+Normalization Review: Solving Modification Anomalies
+most modification problems are solved by breaking an existing table into two or more tables through a process known as normalization
+
+Ex. breaking car table to two separate tables
++----------+------------+
+|customerId|customerName|
++----------+------------+
+|1         |Penny       |
++----------+------------+
+|2         |Raj         |
++----------+------------+
+|3         |Leonard     |
++----------+------------+
+|4         |Sheldon     |
++----------+------------+
+
++----------+----------+----------+----------+
+|carId     |year      |make      |model     |
++----------+----------+----------+----------+
+|102       |2003      |Volkswagen|Golf      |
++----------+----------+----------+----------+
+|101       |2014      |BMW       |550i      |
++----------+----------+----------+----------+
+|103       |2010      |Nissan    |Sentra    |
++----------+----------+----------+----------+
+
+Normalization Definitions
+
+Functional Dependency - relationship (within the relation) that describes how the value of one attribute may be used to find the value of another attribute
+
+Determinant - an attribute that can be used to find the value of another attribute in the relation
+
+Candidate Key - value of a candidate key can be used to find the value of every other non-key attribute in the table
+--> a simple candidate key consists of only one attribute
+--> a composite candidate key consists of more than one attribute
+
+
+Normal Forms:
+First Normal Form (1NF)
+Second Normal Form (2NF)
+Third Normal Form (3NF)
+Boyce-Codd Normal Form (BCNF)
+Fourth Normal Form (4NF)
+Fifth Normal Form (5NF)
+Domain/Key Normal Form (DKNF)
+Sixth Normal Form (6NF)
+
+A relation is considered normalized when every determinant is a candidate key
+--> this is Boyce-Codd Normal Form (BCNF)
+--> sometimes called 3.5NF; slightly more stringent than 3NF
+a database in 3NF or above is generally not susceptible to modification anomalies
+
+Normalization Ex.
+
++---------------+
+|Customer       |
++---------------+
+|customerId     |
++---------------+
+|name           |
++---------------+
+|address        |
++---------------+
+|city           |
++---------------+
+|state          |
++---------------+
+|zip            |
++---------------+
+|accountantId   |
++---------------+
+|accountantName |
++---------------+
+|accountantPhone|
++---------------+
+
+--> not normalized because all the attributes in the table cannot be determined by the customer ID
+ex. zip --> should give city and state
+    accuntantId --> should give accountantName and accountantPhone
+
+Normalized Set of Tables
+
++---------------+
+|Customer (PK)  |
++---------------+
+|customerId     |
++---------------+
+|name           |
++---------------+
+|addresss       |
++---------------+
+|zip (FK)       |
++---------------+
+|accountantId   |
+|(FK)           |
++---------------+
+
++----------+
+|Zip Code  |
++----------+
+|zip (PK)  |
++----------+
+|city      |
++----------+
+|state     |
++----------+
+
++---------------+
+|Accountant     |
++---------------+
+|accountantId   |
+|(PK)           |
++---------------+
+|accountantName |
++---------------+
+|accountantPhone|
++---------------+
+
+Denormalization
+normalizaiton relations --> may increase complexity of data structure
+balance: trading complexity for modification problems and speed
+--> joining many tables together takes time, and therefore slows the query process
+many situations in which denormalized relations are preferred
+
+Ex.
++---------------+
+|Customer       |
++---------------+
+|customerId     |
++---------------+
+|name           |
++---------------+
+|address        |
++---------------+
+|city           |
++---------------+
+|state          |
++---------------+
+|zip            |
++---------------+
+|accountantId   |
++---------------+
+--> joined zip table and customer table together in one
+--> this is denormalized
+--> from performance perspective - this is desirable because no need of join operations
+
+in database world: join operations are computationally and temporarily expensive process
+--> takes database engine a number of cycles to join tables together -- extra time slows down the query performance
+
+--> increased query performance if we want to extract customer and zip at once
+--> also increased simplicity: we now have two tables instead of three
+
+Denormalization Pros and Cons
+Benefits: simplicity; improved query performance
+Costs: modification anomalies; redundant data; more storage space is required
+--> more space required b/c duplicates can be found
+
+Only denormalize when one of the benefits listed above outweighs the costs
+
+Representing Relationships: 1:1 Relationships
+
+1:1 relationship
+the key from one relation is placed in the other as a foreign key
+if both sides of the relationship are optional, it does not matter which table receives the foreign key
+if only one side of the relationship is optional, the optional side receives the foreign key
+i.e. optional: the side has a minimum cardinality of 0
+     non-optional: the side has a minimum cardinality of 1
+
+Emplyoee <--> Locker
+Locker   <--> Employee
+Can place foreign key in whichever side we prefer
+think of it as: "If every employee gets a locker" OR
+                "If every locker belongs to an employee"
+
+Patient <-- Bed
+One-to-one binary relationship where minimum cardinality on one side of the relationship is zero while other side is one, put foreign key on optional side of the relationship
+FK placed in the Hospital patient table
+--> BedId is the optional Foreign Key b/c not every patient may be using a hospital bed
+
+Representing Relationships: SQL for 1:1 Relationships
+
+SELECT *
+FROM   Locker L, Employee E
+WHERE  L.lockerId = E.lockerId;
+
+SELECT *
+FROM   Locker L, Employee E
+WHERE  L.employeeId = E.employeeId
+
+Representing Relationships: 1:N Relationships
+1:N = one-to-many
+1:N relationship is implemented by placing the primary key from one table into another table as a foreign key
+--> however, in a 1:N the foreign key always goes into the many side of the relationship
+--> 1 side is called the parent
+--> N side is called the child
+
+Ex. Group_Permissions Table
+Many Groups mapping to many Group_Permissions
+The Group_Permissions has a foreign key to User_Groups
+--> it also has foreign keys to permissions
+
+Player <-- Team
+N:1
+Foreign key is in Player Table --> teamId (FK)
+
+SELECT *
+FROM   Team T, Player P
+WHERE  T.teamId = P.teamId;
+
+Representing Relationships: N:M Relationships
+Implement a N:M relationship --> a new table is created
+--> this table is called an intersection table or an associative entity
+
+User_Groups Table <-- Group_Permissions Table --> Permissions Table
+
+Group_Permissions Table is the intersection Table
+
+Ex.
+Student <--> Class
+
+Student <-- Student_Class --> Class
+
+Intersection table = Look-Up table -- it has two foreign keys
+
+SELECT *
+FROM   Student S, Class C, Student_Class SC
+WHERE  S.SID = SC.SID
+AND    SC.ClassNumber = C.ClassNumber;
+
+Similar to join query combining User_Login, User_Roles, User_Groups, and Group_Permissions all at once
+
+Another type of intersection table:
+Associative Entity
+
+Association Relationships - when an intersection table has additional attributes beyond those that comprise the primary key - the relationship is called an association relationship
+
+Ex.
+Student_Class Joint Table
+Student ID (FK)
+Class (FK)
+Grade --> this makes the table associative relationship table
+
+Surrogate Keys and Associative Entities
+when an associative entity uses a composite primary key composed of the primary keys of its parent tables, each possible matched pair of values can appear only once in the associative entity
+
+when an associative entity uses a surrogate key, however, each possible matched pair of values can appear many times in the associative entity
+
+Customer rates many products; and products can be rated by many customers
+
+Customer <-- Rating --> Product
+
+Surrogate Key: ratingId
+
+Rating
+ratingId (PK)
+customerId (FK)
+productId (FK)
+
+Representing Relationships: Recursive Relationships
+a recursive relationship occurs when a table is related to itself
+recursive relationships adhere to the same rules as binary relationships
+--> 1:1 and 1:N recursive relationships implemented using foreign keys
+--> N:M recursive relationships are implemented by creating an intersection table
+
+Example.
+
++---------------+
+|Person         |
++---------------+
+|Phone          |
++---------------+
+|Email          |
++---------------+
+1:1 recursive relationship
+--> Sponsored by
+
++---------------+
+|CustomerNumber |
++---------------+
+|LastName       |
++---------------+
+|FirstName      |
++---------------+
+|Address        |
++---------------+
+|City           |
++---------------+
+|State          |
++---------------+
+|ZIP            |
++---------------+
+|Phone          |
++---------------+
+1:N recursive relationship
+--> Referred by
+--> each customer may refer many customers
+--> However, a customer can only be referred by a maximum of one customer
+
++---------------+
+|Doctor         |
++---------------+
+|OfficeAddress  |
++---------------+
+|City           |
++---------------+
+|state          |
++---------------+
+|ZIP            |
++---------------+
+|Phone          |
++---------------+
+N:M recursive relationship
+--> Treated-By
+--> Each doctor may be treated by many doctors
+--> and each doctor may treat many doctors
+
+--> to see relationships, strategy is to join tables with themselves
+
+Ex.
+SELECT *
+FROM   PERSON1 AS A, PERSON1 AS B
+WHERE  A.Person = B.PersonSponsored;
+--> referencing same table twice
+
+1:N relationship
+
+SELECT *
+FROM CUSTOMER AS A, CUSTOMER AS B
+WHERE A.CustomerNumber = B.ReferredBY;
+
+N:M relationship
+
+SELECT *
+FROM   DOCTOR AS A,
+       DOCTOR AS B,
+       TREATMENT-INTERSECTION
+WHERE  A.Name = TREATMENT-INTERSECTION.Physician
+AND    TREATMENT-INTERSECTION.Patient = B.Name;

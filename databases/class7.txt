@@ -1,0 +1,120 @@
+Database Indexes
+
+indexes: a useful tool for achieving high performance in a relational database
+--> the single most critical tool for improving database performance
+
+index - a data structure that contains a copy of some of the data from one or more existing database tables
+--> database index provides an organizational framework that the DBMS can use to quickly locate the information that it needs
+
+linear search vs binary search
+
+binary search - sort by ABC order, then divide and conquer
+
+Indexes are created on one or more columns in a table
+1. an index is created on a PK column
+2. index will contain the PK value for each row in the table, along with each row's ordinal position within the table
+3. when a query involving the PK is run, the DBMS will find the PK value within the index. DBMS will then know the position of the row within the table
+4. the DBMS can quickly locate the row in the table that is associated with the PK value
+
+Index can not be created on all columns
+whether an index can be created on a column depends on the column's data type
+columns with large object (LOB) data types cannot be indexed without employing additional mechanisms (e.g. hashing)
+these LOB data types include:
+text, ntext, image, varchar(max), nvarchar(max), varbinary(max)
+
+Creating an index increases amount of storage space required by the database
+--> occurs because an index contains a copy of some of the data in a table
+
+Formula for estimating storage space requirements of an index:
+Number of rows in table * average number of bytes required per row for the indexed column
+
+Ex. lastName and rowId
+
+Say lastName column is average 16 bytes/row
+Storage = # of rows * (storage of lastName)
+
+B-Tree Index
+most common type of index
+B-tree = balanced tree
+uses pointers and several layers of nodes in order to quickly locate desired data
+
+Root node                 Less granular
+Intermediate nodes
+Leaf nodes                More granular
+
+Ex. ABC-Order
+
+A-W                 Root Node
+    A-L             Intermediate Nodes
+        A-D         Leaf Nodes
+        F-G
+        H-L
+    M-W
+        M-P
+        S
+        V-W
+--> practically divide and conquer
+
+Clustered Indexes
+actual data rows that comprise the table are stored at the leaf level of the index
+indexed values are stored in a sorted order (ascending or descending)
+--> means there can only be one clustered index per table
+--> PK columns are good candidates for clustered indexes
+
+Nonclustered Indeexs
+leaf nodes contain the values from the indexed columns, along with a row locater which points to the location of the actual data row
+--> might be stored in a leaf node or a clustered index or in a heap
+slower than clustered indexes b/c DBMS must follow a pointer to retrieve the actual data row
+a table can have more than one nonclustered index
+
+Bitmap Index
+a table is created with the values of one attribute along the horizontal axis and the values of another attribute along the vertical axis
+a bit value (1 or 0) in each cell within the table indicates whether the value of one attribute is associated with a value of the other attribute
+works best when one or both of the attributes has only a small number of unique values
+when used properly, a bitmap index can require only 25% of the disk space and can be 10 times faster than a tree-based index
+
++----------+----------+----------+----------+----------+----------+
+|Student   |          |          |          |          |          |
+|Grade     |          |          |          |          |          |
++----------+----------+----------+----------+----------+----------+
+|Student ID|A         |B         |C         |D         |F         |
++----------+----------+----------+----------+----------+----------+
+|101       |0         |1         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|102       |0         |1         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|103       |1         |0         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|104       |0         |0         |1         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|105       |0         |1         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|106       |0         |0         |0         |1         |0         |
++----------+----------+----------+----------+----------+----------+
+|107       |0         |1         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+|107       |0         |1         |0         |0         |0         |
++----------+----------+----------+----------+----------+----------+
+
+
+Hashed Index
+hashing algorithm is used to convert an input value into a location within an index
+--> in turn contains or points to the actual data row
+hashed indexes are useful in several situations, including:
+in a parallel processing or distributed database environment; when a need exists to index complex objects (such as images)
+
+Index Considerations
+indexes consume a lot of storage space - should only create indexes on columns that are involved in common queries
+Indexes should be used sparingly on tables that are updated frequently
+--> whenever an INSERT, UPDATE, or DELETE operation affects an indexed column, the index for the column must be rebuilt
+--> rebuilding an index takes time, and an index which is rebuilt often can actually slow the overall performance of the database
+
+Indexing Guidelines
+if a table is heavily updated, index as few columns as possible
+--> do not over-index heavily updated tables
+if a table is updated rarely, use as many indexed columns as necessary to achieve maximum query performance
+clustered indexes are best used on columns that do not allow null values and whose values are unique
+--> PK columns are therefore good targets for clustered indexes
+the performance benefits of an index are related to the uniqueness of the values in the indexed column
+--> index performance is poor when an indexed column contains a large proportion of duplicate values
+--> index performance is best when an indexed column contains unique values

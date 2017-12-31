@@ -1,0 +1,290 @@
+Data Modeling and the Entity-Relationship (ER) Model
+
+Three Stages of Database Development
+1) Requirements Analysis Stage
+gathering information so we can understand the data problem.
+
+2) Component Design Stage
+create data models - graphical representations of database solution
+
+3) Implementation Stage
+actually implementing the database design
+
+
+Requirements Analysis Stage
+Sources of requirements
+user interviews, forms, reports, queries, use cases, business rules, observations, JAD sessions
+--> understanding data problem
+
+JAD - joint application development session
+--> assembling all stakeholders into a single room
+    ex. system designers, executives, customers, etc
+
+Requirements become the E-R data model
+after requirements gathered, they are transformed into an entity relationship (E-R) data model
+
+E-R Models
+1) Entities
+2) Attributes
+   a. Identifiers (Keys)
+   b. Non-key attributes
+3) Relationships
+
+Entity Class vs. Entity Instance
+
+Entity Class - description of the structure and format of the occurences of the entity
+--> similar to a recipe or architecturual blueprints
+
+Entity Instance - specific occurrence of an entity class
+
+Ex.
+Entity Class
+Item
+itemNumber
+description
+cost
+listPrice
+quantityOnHand
+
+Two Entity Instances
+1100			2000
+100 amp panel		Door handle set
+$127.50			$52.50
+$170			$39.38
+14			0
+
+object oriented programming is analogous to entity class
+
+Attributes
+entities have attributes that together describe the entity
+Ex. projectName, startDate, projectType, projectDescription
+each attribute has a data type and other properties
+
+Identifiers (Keys)
+entity instances have identifiers (keys)
+--> keys are a type of attribute
+key will identify a specific instance in the entity class
+ex. socialSecurityNumber, studentId, employeeId, emailAddress, departmentId
+
+Keys are either unique or nonunique
+
+Ex. nonunique keys
+User_Login table has multiple foreign key duplicates corresponding to groups
+--> multiple users belong to single groups
+
+Composite Key
+consists of two or more attributes
+ex. flight number and flight date
+
+Level of Entity Attribute Display
+PK = primary key
+
+Item  	 	Item		Item
+		PK itemId	PK itemId
+		   		description
+				cost
+				listPrice
+				quantity OnHand
+
+
+entity with	entity showing	entity showing all
+no attributes	only key	attributes
+   		attributes
+
+
+Relationships b/w entities
+entites can be connected to each other in relationships
+degree of the relationship defines the number of entity classes that participate in the relationship
+Degree 1 is a unary relationship
+Degree 2 is a binary relationship
+Degree 3 is a ternary relationship
+
+Ex. internship
+I had a degree 5 relationship
+User_Login Table -> User_Groups Table -> Group_Permissions Table -> Permissions Table -> Spacecraft Table
+
+Degree 1 relationship
+--> entity related to itself
+--> a recursive relationship
+
+Degree 2 relationship
+--> entity one talks to entity two
+
+Degree 3 relationship
+three entities are involved
+
+Conceptual Unary Relationship
+Person entity
+--> relationship to itself is marriage
+--> person married to another person
+--> entity related to itself
+
+Conceptual Binary Relationship
+Employee <--> Parking Space
+
+Conceptual Ternary Relationship
+
+Doctor -- Prescription -- Patient
+       	        |
+		|
+	      Drug
+--> doctor writes prescription related to a drug for a patient
+
+Conceptual Crow'sFoot Relationship Symbols
+
+One --
+Many --|| --> more like crow feet -- hard to show in txt file
+
+Ex. tyvak internship
+User_Groups --> Group_Permissions --> Permissions
+One to many relationship
+one group associated with many permissions
+
+One-to-One Binary Relationship
+1:1
+single entity in one entity class is related to a single instance in another entity class
+ex. an employee may have no more than one locker
+    a locker may only be used by one employee
+
+Employee <--> Locker
+
+One-to-Many Binary Relationship
+1:M
+single entity instance in one entity class is related to many entity instances in another entity class
+ex. an employee works in one department
+    a department can have many employees
+Employee ||-- Department
+
+Conceptual Many-to-Many Binary Relationship
+N:M
+many entity instances in one entity class are related to many entity instances in another entity class
+ex. a supplier may have several items
+    a particular item may be supplied by several supplies
+Item ||--|| Supplier
+
+Note: although we can think about many-to-many relationships conceptually, this cannot be made directly. must always have a third table sitting between them which acts as a look-up table
+
+Ex. User_Groups table --|| Group_Permissions table ||-- Permissions Table
+
+Types of Cardinalities
+1) Maximum Cardinality
+2) Minimum Cardinality
+
+Cardinalities - means count (number of items in a set)
+	      	relations are named and classified by their cardinalities
+
+1) Maximum Cardinality
+maximum number of entity instances that can participate in a relationship instance
+ex. one, many, or some other positive fixed number
+
+2) Minimum Cardinality
+minimum number of entity instances that must participate in a relationship instance
+these values typically assume a value of zero (optional) or one (mandatory)
+
+There are Crow's foot symbols to symbolize the cardinalities and relationships
+--> must search up online
+--> consider exporting notes into a PDF
+One-and-Only-One
+One-to-Many
+Zero-to-One
+Zero-to-Many
+
+Cardinality Example
+maximum cardinality is many for Order and one for Customer
+minimum caridnality is one for both Customer and Order
+--> each customer can place one or more orders
+--> each order is associated with one and only one customer
+
+Customer **--** Order
+--> some crow's foot symbol above
+
+Entity-Relationship Diagrams
+diagrams shown in examples above
+entities represented by rectangles
+relationships represented by lines
+cardinalities represented by Crow's Foot symbols
+
+HAS-A Relationships
+Relations in above examples HAS-A relationship
+ex. employee must have a locker or a locker must have an employee
+
+Strong and Weak Entities
+weak entity - entity instances cannot exist in the database without the existence of an instance of another entity
+--> Ex. Tyvak Internship
+    	in User_Login table, a user cannot exist until a group exists first
+
+Any entity that is not a weak entity is called a strong entity
+--> instances of strong entity can exist in the database independently
+--> Ex. strong entity is a Spacecraft --> it is made first and can stand independently
+
+ID-Dependent Weak Entities
+weak entity that cannot exist without its parent entity
+this requirement is enforced by using a composite key for the weak entity
+first patr of the key is the key for the strong entity
+second part of the key is the key for the weak entity itself
+
+Ex. Tyvak internship
+Permissions --> its uniqueness is linked to Spacecraft
+
+Weak Entity Relationships
+relationship b/w strong and weak entities
+
+Identifying Relationship
+if the weak entity is ID-dependent
+--> represented by a solid line
+
+Non-Identifying Relationship
+if the weak entity is non-ID-dependent
+--> represented by a dashed line
+--> also used between strong entities
+
+Weak Entity Identifier: Non-ID-dependent
+all ID-dependent entities are weak entities, but there are other entities that are weak but not ID-dependent
+a non-ID-dependent weak entity may have a single or composite key, but the key of the parent entity will be a foreign key within the weak entity
+
+Subtype Entites
+subtype entity - special case of another entity
+--> which is called a supertype
+ex. vehicle --> subtypes: car, truck, or motorcycle
+discriminator - an attribute of the supertype may be used to indicate which of the subtypes is appropriate for a given instance
+subtypes can be exclusive or inclusive
+--> exclusive: subtype relates to at most one subtype
+--> inclusive: subtypes relates to one or more subtypes
+
+Subtype Entity Identifiers
+the identifier of a supertype and all of its subtype is the same attribute
+the relationships that connect supertypes and subtypes can be a IS-A relationships if a subtype is the same entity as the supertype
+--> an instance of the subtype inherits all of the properties of its supertype
+
+Ex. exclusive supertype-subtype relationship
+
+Student -- undergraduate -- highschoolGPA, SATscore
+	-- graduate	 -- undergradGPA,  GMATscore
+
+supertype  subtype
+
+Ex. inclusive subtype
+Student -- Hiking Club
+	-- Sailing club
+
+Inclusive because each student can potentially be related to more than one subtype
+--> a student can be in both hiking club and sailing club
+
+A circular symbol: denotes inclusive supertype subtype relationship
+a circular X symbol: denotes exclusive supertype subtype relationship
+
+Recursive Relationships
+an entity has a unary relationship to itself
+recursion can be used to implement heirarchical relationships
+
+Ex.
+Employee Entity
+employeeId
+firstName
+lastName
+managerId
+
+managerId --> maps with employeeId
+
+recursive relationships can produce a family tree representing heirarchy
+--> ex. managers and employees they manage

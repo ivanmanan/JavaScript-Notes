@@ -1,0 +1,437 @@
+Database Administration
+
+Database Processing Environment
+
+Database <--> DBMS
+DBMS --> forms, reports, queries, active server pages (ASP's), stored procedures, triggers, application programs in COBOL, C++, etc.
+
+Critical Database Administrative Functions
+Control, Security, and Reliability
+1) Concurrency control
+2) Security
+3) Backup and recovery
+
+1) Concurrency Control
+
+Concurrency
+people or applications may try to update the same information at the same time
+
+Interdependency
+changes requested by one user may impact others
+
+concurrency control ensures that one user's actions do not adversely impact another user's actions
+
+core of currency is accessibility
+--> one extreme: data become inaccessible once a user touches the data - ensures that data that are being considered for update are not readable by other users
+--> other extreme: data are always readable - data are even readable when they are locked for update
+
+Atomic Operations
+database transaction - involves several operations
+these operations are atomic and are called logical units of work (LUW)
+before a transaction is committed to the database, all LUW must be successfully completed
+--> if one or more LUW is unsuccessful, a rollback is performed and no changes are saved to the database
+
+Ex. Concurrent Processing
+
++-------------------------+
+|User A                   |
++-------------------------+
+|1. read item 100         |
++-------------------------+
+|2. change item 100       |
++-------------------------+
+|3. write item 100        |
++-------------------------+
+
++-------------------------+
+|User B                   |
++-------------------------+
+|1. read item 200         |
++-------------------------+
+|2. change item 200       |
++-------------------------+
+|3. write item 200        |
++-------------------------+
+
++-------------------------+
+|Order of processing      |
+|Ddatabase Server         |
++-------------------------+
+|1. read item 100 for A   |
++-------------------------+
+|2. read item 200 for B   |
++-------------------------+
+|3. change item 100 for A |
++-------------------------+
+|4. write item 100 for A  |
++-------------------------+
+|5. change item 200 for B |
++-------------------------+
+|6. write item 200 for B  |
++-------------------------+
+
+Lost Update Problem
+if two or more users are attempting to update same datum at the same time, it is possible for one update to overwrite the other update
+
+Ex. Lost Update Problem
++-------------------------+
+|User A                   |
++-------------------------+
+|1. read item 100 (assume |
+|   item count is 10)     |
++-------------------------+
+|2. reduce count of items |
+|   by 5                  |
++-------------------------+
+|3. write item 100        |
++-------------------------+
+
++-------------------------+
+|User B                   |
++-------------------------+
+|1. read item 100 (assume |
+|item count is 10)        |
++-------------------------+
+|2. reduce count of items |
+|   by 3                  |
++-------------------------+
+|3. write item 100        |
++-------------------------+
+
++-------------------------+
+|Order of processing      |
+|Ddatabase Server         |
++-------------------------+
+|1. read item 100 for A   | --> return 10
++-------------------------+
+|2. read item 200 for B   | --> return 10
++-------------------------+
+|3. set item count to 5   | --> A: 10-5=5 items left
+|   for A                 |
++-------------------------+
+|4. write item 100 for A  |
++-------------------------+
+|5. set item count to 7   | --> B: 10-3=7
+|   for B                 |
++-------------------------+
+|6. write item 100 for B  | --> database shows 7
++-------------------------+
+
+Problem: database shows 7 items because B overwrote item 100 last over item A --> real value should be 2
+
+Concurrency Issues
+dirty reads - transaction reads a modified record that has not yet been committed to the database
+inconsistent reads - transaction re-reads a data set and finds that the data have changed
+phantom reads - transaction re-reads a data set and finds that a new record has been added
+
+Solution to concurrency issues: Resource Locking
+
+Resource Locking
+disallow transactions from reading, updating, and/or writing to a data set that is in use
+
+Implicit Locks - issued automatically by the DBMS based on an activity
+
+Explicit Locks - issued by users requesting exclusive rights to specific data
+--> table locks, row locks, column locks, cell locks
+
+Ex. Explicit Locking
++-------------------------+
+|User A                   |
++-------------------------+
+|1. lock item 100         |
++-------------------------+
+|2. read item 100         |
++-------------------------+
+|3. reduce count by 5     |
++-------------------------+
+|4. write item 100        |
++-------------------------+
+
++-------------------------+
+|User B                   |
++-------------------------+
+|1. lock item 100         |
++-------------------------+
+|2. read item 100         |
++-------------------------+
+|3. reduce count by 3     |
++-------------------------+
+|4. write item 100        |
++-------------------------+
+
++-------------------------+
+|Order of processing at   |
+|database server          |
++-------------------------+
+|1. lock item 100 for A   |
++-------------------------+
+|2. read item 100 for A   |
++-------------------------+
+|3. lock item 100 for B;  |
+|cannot, so place B in    |
+|wait state               |
++-------------------------+
+|4. set item count to 5   |
+|for A                    |
++-------------------------+
+|5. write item 100 for A  |
++-------------------------+
+|6. release A's lock on   |
+|item 100                 |
++-------------------------+
+|7. place lock on item 100|
+|for B                    |
++-------------------------+
+|8. read item 100 for B   |
++-------------------------+
+|9. set item count to 2   |
+|for B                    |
++-------------------------+
+|10. write item 100 for B |
++-------------------------+
+|11. release B's lock on  |
+|item 100                 |
++-------------------------+
+
+No longer have Lost Update problem
+--> inventory count is correct
+
+Serializable Transactions
+when two or more transactions are processed concurrently, the results in the database should be logically consistent with the results that would have been achieved had the transactions been processed in an arbitrary serial fashion
+serializable - a scheme for processing concurrent transactions in the above method
+
+A+B=C
+B+A=C
+--> i.e. results should be identical no matter the order the transactions are performed
+
+Ex. Handle User B's request first, then handle User A's request
+
+Locking strategy can introduce certain new problems
+
+Deadlock
+as a transaction begins to lock resources, it may have to wait for a particular resource to be released by another transaction
+deadlock - condition when two transaction may indefinitely wait on each other to release resources
+
+Ex. deadlock
+
++-------------------------+
+|User A                   |
++-------------------------+
+|1. lock paper            |
++-------------------------+
+|2. take paper            |
++-------------------------+
+|3. lock pencils          |
++-------------------------+
+
++-------------------------+
+|User B                   |
++-------------------------+
+|1. lock pencils          |
++-------------------------+
+|2. take pencils          |
++-------------------------+
+|3. lock paper            |
++-------------------------+
+
++-------------------------+
+|Order of processing at   |
+|database server          |
++-------------------------+
+|1. lock paper for User A |
++-------------------------+
+|2. lock pencils for User |
+|B                        |
++-------------------------+
+|3. Process A's requests; |
+|write paper record       |
++-------------------------+
+|4. Process B's requests; |
+|write pencil record      |
++-------------------------+
+|5. put A in wait state   |
+|for pencils              |
++-------------------------+
+|6. put B in wait state   |
+|for paper                |
++-------------------------+
+--> Locked
+
+Optimistic Locking
+read data, process transaction, issue update, look for conflict, if no conflict occurred then commit transaction, else rollback and repeat transaction
+--> Many SELECTs, few INSERTs, UPDATEs, or DELETEs
+
+Pessimistic Locking
+lock required resources, read data, process transaction, commit changes, release locks
+--> Many INSERTs, UPDATEs, or DELETEs
+--> use this when two users likely to change data
+
+Consistent Transactions
+acronym ACID transaction
+Atomic
+Consistent
+Isolated
+Durable
+
+ACID: Atomic
+atomic transaction - all of the database actions occur or none of them does
+a transaction consists of a series of steps. Each step must be successful for the transaction to be saved
+this ensures that the transaction completes everything it intended to do before saving the changes.
+
+ACID: Consistent
+transaction is consistent if no other transactions are permitted on the records until the current transaction finishes its tasks
+this ensures that the transaction integrity has statement level consistency among all records
+
+ACID: Isolation
+four isolation levels that specify which of the concurrency control problems are allowed to occur
+1. READ UNCOMMITED
+2. READ COMMITTED
+3. REPEATABLE READ
+4. SERIALIZABLE
+
+1->4 = least restrictive --> most restrictive
+
+ACID: Durable
+durable transaction - all committed changes are considered permanent in the database
+
+Cursors
+a cursor is a pointer into a set of rows that is the result set from a SQL SELECT statement
+result sets can be very large, so applications and websites often cannot work with the entire result set as a single unit
+cursors allow a reset set to be processed one row at a time
+cursors are commonly defined using SELECT statements
+
+DECLARE CURSOR LargePurchases AS
+        SELECT *
+        FROM   sale
+        WHERE  purchasePrice >= 10000;
+
+Cursor Types
+1) Forward-Only Cursors (non-scrollable)
+   rows fetched serially from the start to the end of the cursor
+   rows are not retrieved from the database until they are fetched
+   the effects of any INSERT, UPDATE, or DELETE statements that affect rows in the result set are visible as hte rows are fetched from the cursor
+   the cursor cannot be scrolled backward
+   changes made to a row in the database after the row has been fetched are not visible through the cursor
+
+2) Scrollable Cursors
+   the cursor can scroll forward and backward through the result set as needed to examine rows
+   1. Static cursors
+   2. Keyset cursors
+   3. Dynamic cursors
+54:31 -- more info on the above cursors
+
+Database Security
+strives to ensure that only authenticated users perform authorized activities
+
+Users --> +--------------------+ --> +--------------------+
+          |Authentication      |     |Authorization       |
+          +--------------------+     +--------------------+
+          |Login Name          |     |Permissions         |
+          +--------------------+     +--------------------+
+          |Password            |
+          +--------------------+
+
+--> Database
+
+Ex. Tyvak Internship
+User_Login Table --> Groups --> Permissions --> Authentication
+
+Processing Rights and Responsibilities
+Processing rights - who is permitted to perform certain actions; when certain actions are allowed to be performed
+individuals performing these activities have full responsibility for the implications of their actions
+individuals are authenticated via a username and a password
+
+Granting Permissions
+database users are known both as an individual and as a member of one or more roles
+--> access and data rights/privileges may be granted to an individual and/or a role
+permissions grant, deny, or revoke a user's ability to interact with specific database objects
+users possess the compilation of permissions granted to the individual and all the roles for which they are members
+--> user receives the union of all the permissions granted, denied, or revoked by their individual permissions and role permissions
+--> if a conflict exists b/w individual and role permissions, then: a deny permission at any level always takes precedence; OR aside from denies, role permissions take precedence over individual permissions
+
+SQL Server Database Roles
+database roles can either be fixed or flexible
+flexible roles - custom roles defined by the database administrator
+fixed roles - predefined roles to which database users can be assigned
+
+Fixed Database Roles Sample
++-------------------------+-------------------------+
+|Fixed Role Name          |Permissions              |
+|                         |                         |
++-------------------------+-------------------------+
+|db_owner                 |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_securityadmin         |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_accessadmin           |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_backupoperator        |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_ddladmin              |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_datawriter            |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_datareader            |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_denydatawriter        |                         |
+|                         |                         |
++-------------------------+-------------------------+
+|db_denydatareader        |                         |
+|                         |                         |
++-------------------------+-------------------------+
+
+Database Security Guidelines
+run DBMS behind a firewall
+apply latest operating system and DBMS service packs and patches
+limit DBMS functionality to needed features
+physically protect the computers that run the DBMS
+manage accounts and passwords carefully
+
+Database Backup and Recovery
+common causes of database failures
+--> hardware failures, programming bugs, human errors/mistakes, malicious actions
+impossible to completely avoid --> need recovery procedures
+back-up database regularly
+
+Reprocessing
+all activities since the last backup performed are redone by humans
+--> brute-force technique
+costly procedure in the effort involved in re-entering data
+risky in human error and paper record-keeping may not be accurate
+
+Recovery via rollback and rollforward
+DBMS record activities into a log file
+log file used for recovery via rollback or rollforward
+undo transaction --> log contain copy of every database record before it was changed -- such records are called before-images
+--> transaction undone by applying before-images of all its changes to the database
+redo a transaction the log must contain a copy of every database record after it was changed
+--> these records are called after-images
+--> transaction is redone by applying after-images of all its changes to the database
+
+Rollback
+log files save activities in sequence order
+possible to undo activities by applying before-images to reverse database changes
+performed to correct/undo erroneous or malicious transactions after a database is recovered from a full backup
+
+Rollforward
+activities recorded in the log files may be replayed
+all activities are re-applied to the database
+procedure is used to restore database data by adding transactions to the last full backup
+
+Database Administrator Responsibilities
+mechanism must exist to gather and record user reported errors and other problems
+create and manage a process for controlling database configuration
+ensure that appropriate documentation is maintained
+
+Distributed Database Processing
+database is distributed when it is partitioned, replicated, or both
+
+Object Persistence
+values of object properties are storable and retrievable

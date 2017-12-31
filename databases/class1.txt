@@ -1,0 +1,112 @@
+Purpose of a database
+store data
+provide an organizational structure for data
+provide a mechanism for querying, creating, modifying, and deleting data
+
+CRUD
+Create
+Read - querying
+Update
+Delete
+
+Relational database -- display relationship/heirarchy
+
+Problems with lists
+Redundancy - duplicate entries in lists
+Multiple themes - they could be created in other tables
+List Modification issues - deletion, update, and insertion - lose a lot of data
+--> such as deleting a single row also deletes other existing data
+
+Relational databases stores information in tables. Each informational theme is stored in its own table.
+Columns = different attributes of an entity
+Rows = instances of the entity
+Relational database will break-up a list into several parts or separate tables.
+
+ex. employee table along with a department table with foreign keys
+
+Putting tables together
+Tables need to be joined back together -- join operation
+--> tables are joined together using matched pairs of data values
+
+Structured Query Language (SQL)
+standard language for creating, processing, and querying databases and their tables
+SQL retrieves, formats, reports, inserts, deletes, modify etc.
+
+SQL Example
+Use SQL to combine data in three tables to create a single table
+SELECT Customer.customerLastName, Customer.customerFirstName, Customer.phone,
+       Course.courseDate, Enrollment.amountPaid, Course.course, Course.fee
+FROM   Customer, Enrollment, Course
+WHERE  Customer.customerNumber = Enrollment.customerNumber
+AND    Course.courseNumber = Enrollment.courseNumber;
+
+Database Systems
+Four components are:
+Users
+Database Application(s)
+Database Management System (DBMS)
+Datbase
+
+Users <--> Database Application <--> DBMS <--> Database
+
+Users
+use a database application to keep track of information
+use different user interface forms to enter, read, delete, and query data
+produce reports
+
+Database
+Self-describing collection of related records
+Self-describing:
+database itself contains the definition of its structure
+Metadata: data describing the structure of the data in the database
+tables within a relational database are related to each in some way
+
+Database Contents
+user data
+metadata
+indexes and other overhead data
+application metadata
+
+DBMS
+serves as an intermediary b/w database applications and the database
+DBMS manages and controls database activities
+DBMS creates, processes, and administers the databases it controls
+DBMS IS NOT A DATABASE
+
+Functions of a DBMS
+create databases
+create tables
+create supporting structure
+read database data
+modify database data (insert, update, delete)
+maintain database structures
+enforce rules
+control concurrency
+provide security
+perofrm data backup and recovery
+
+Referential Integrity Constraints
+DBMS can enforce many constraints
+ensure that the values of a column in one table are valid based on the values in
+another table
+--> ex. A user must belong to an existing group in the user_groups table
+
+Database Applications
+set of one or more computer programs or websites that serve as an intermediary
+between the user and the DBMS
+--> Data Access Layer
+
+Personal Database System
+support one application
+have only a few tables
+simple in design
+involve only one computer
+support one user at a time
+
+Enterprise-Level Database Systems
+support several users simultaneously
+support more than one application
+involve multiple ocmputers
+more complex in design
+have many tables
+have many databases

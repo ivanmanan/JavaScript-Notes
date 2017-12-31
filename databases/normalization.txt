@@ -1,0 +1,128 @@
+Normalization
+breaking up a table to multiple tables in order to reduce redundancy and make it more efficient error-free
+
+Ex.
+
+Student
+Id	Name	Dept	Head of Dept	Phone #
+1	S1	CS	Prof A		32272
+2	S2	EE	Prof B		67897
+3	S3	CS	Prof A		32272
+4	S4	IT	Prof C		67327
+5	S5	CS	Prof A		32272
+
+--> redundant b/c Prof A belongs to CS dept
+    --> lots of duplicates
+
+if one phone # gets changed, then the phone # in all the other duplicates must change
+--> another redundancy
+
+Normalization breaks this table into two tables
+
+Student
+Id	Name	Dept
+1	S1	CS
+2	S2	EE
+3	S3	CS
+4	S4	IT
+5	S5	CS
+
+--> dept is foreign keys -- look-up dept table
+
+Department
+Dept Id		Head of Dept		Phone #
+CS		Prof A			32272
+EE		Prof B			67897
+IT		Prof C			67327
+
+Normal Forms
+1NF, 2NF, 3NF, and 4NF
+
+Ex.
+
+Sales Records
+
+Customer Name	Item	Shipping Address	Newsletter	Supplier	Supplier Phone		Price
+
+
+--> too many attributes and lots of duplicate values
+
+1st Normal Form
+each cell to be a single valued
+--> no arrays in cells
+entries in a column are same type
+rows uniquely identified
+--> add unique ID, or add more columns to make unique
+
+Customer ID   Customer Name   Item    Shipping address...
+
+--> Customer ID makes all the rows uniquely identifiable
+
+2nd Normal Form
+All attributes dependent on the key
+Ex. Customer ID --> Price
+--> customer ID does not matter on the key
+
+Solution: separate the tables
+
+Customer ID	   customer name	shipping address		newsletter
+
+
+
+
+Item	 Supplier  	    Supplier Phone	 Price
+
+
+--> Customer ID and Item are primary keys
+
+
+Junction Table
+Two primary keys --> AKA compound key
+
+Customer ID 	 Item
+
+
+
+3rd Normal Form - all fields (columns) can be determined only by the key in the table and no other column
+
+Ex.
+Item	Supplier	Supplier Phone		Price'
+
+--> Can normalize with one-to-one relationships
+
+Solution:
+
+Item	Supplier (FK)	Price
+
+
+
+
+
+Supplier (PK)	 Supplier Phone
+
+
+
+
+4th Normal Form
+No multivalued dependency
+
+Ex.
+Customer ID	Customer Name		Shipping Address		Newsletter
+
+
+--> Customer name, Shipping Address, and Newsletter depends on Customer ID
+--> all dependencies of the primary key
+
+Ex. customer subscribed to two newsletters: Xbox news and Playstation news
+--> produces duplicate rows but different values only in the Newsletter column
+
+Solution:
+
+Customer ID	Customer Name		Shipping Address
+
+
+Customer ID	Newsletter
+--> the rows will prevent duplicates
+
+
+after 4th normal form: All tables are 1 to many

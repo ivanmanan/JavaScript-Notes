@@ -1,0 +1,463 @@
+Structured Query Language (SQL)
+
+Four basic database options
+Create
+Read
+Update
+Delete
+
+SQL
+Pronounced "Sequel" or "S-Q-L"
+Not a programming language but a data sub-language
+
+SQL comprised of:
+data definition language (DDL)
+--> define and manage database structures
+data manipulation language (DML)
+--> data defintion and updating
+--> data retrieval (Queries)
+--> all of CRUD
+data control language (DCL)
+--> for creating user accounts, managing permissions, etc
+
+Data Definition
+create - create database objects
+alter - modify structure and/or characteristics of
+      	existing database objects - can add constraints
+	or delete columns
+drop - delete existing database objects
+
+I altered User_Login table to add in Group_Id foreign key
+and User_Role foreign key
+
+I dropped existing tables in order to reset the primary
+key Id's that auto increment
+
+Ex.
+
+CREATE TABLE Employee (
+       empId 	      Integer		NOT NULL,
+       empName	      Char(25)		NOT NULL
+);
+
+commna --> signifies new attribute
+semicolon --> end of SQL statement
+
+Ex.
+
+CREATE TABLE Employee (
+       empId 	      Integer		NOT NULL,
+       empName	      Char(25)		NOT NULL
+       CONSTRAINT     empPK		PRIMARY KEY(empId)
+);
+
+Every constraint must have a unique value
+Defines empId as the primary key
+Therefore, every empId must be unique
+
+Ex. with composite primary key
+
+CREATE TABLE EmployeeSkill (
+       empId 		   Integer	NOT NULL,
+       skillId		   Integer	NOT NULL,
+       skillLevel	   Integer	NULL,
+       CONSTRAINT 	   empSkillPK	PRIMARY KEY(empId, skillId)
+);
+
+Composite primary key: consisting of two primary key values
+
+Primary key is a constraint
+a foreign key is a constraint
+
+Ex. with foreign key
+
+CREATE TABLE EmployeeSkill (
+       empId 		   Integer	NOT NULL,
+       skillId		   Integer	NOT NULL,
+       skillLevel	   Integer	NULL,
+       CONSTAINT	   empSkillPK	PRIMARY KEY(empId, skillId),
+       CONSTRAINT	   empFK	FOREIGN KEY(empId) REFERENCES Employee(empId),
+       CONSTRAINT	   skillFK	FOREIGN KEY(skillId) REFERENCES Skill(skillId)
+);
+
+establishes two foreign keys
+
+Ex. Tyvak internship
+User_Login table has two foreign keys:
+One for User_Roles
+One for User_Groups
+
+DELETE CASCADE
+If employee 1 leaves organization in Employee Table
+Cascading delete will follow the relationship line
+(the foreign key relationship) and delete the sequential
+row from the table
+It will delete any records with any association
+of the starting object deleted
+
+"CONSTRAINT empFK FOREIGN KEY(empId) REFERENCES
+ Employee(empId) on DELETE CASCADE"
+
+maintains the integrity and quality of database
+--> deletes unused data
+--> BUT: what if two objects have the same foreign key?
+    --> Delete cascade may not work here
+
+UPDATE CASCADE
+
+"CONSTRAINT skillFK FOREIGN KEY(skillId) REFERENCES
+ SKILL(skillId) ON UPDATE CASCADE"
+
+Ex.
+Employee	EmployeeSkill		  Skill
+empId empName	empId skillId skillLevel  skillId skill
+1     Dan	1     101     5		  [105]	  Sleeping
+
+say we change 101 to 105
+--> updating Skill automatically updates EmployeeSkill
+101 --> 105 for both tables
+
+ALTER Statements
+
+Ex.
+ALTER TABLE Employee ADD CONSTRAINT empPK PRIMARY KEY(empId);
+
+ALTER TABLE EMPLOYEE
+      ADD CONSTRAINT empFK FOREIGN KEY(deptId)
+      	  REFERENCES Department(deptId)
+
+Modifying Data using SQL
+INSERT INTO
+UPDATE
+DELETE ROW
+
+INSERT INTO Employee (empId, salaryCode, lastName)
+       VALUES (62, 11, "Halpert");
+--> order matters in parentheses
+
+UPDATE Employee
+SET    phone = "657-278-1234"
+WHERE  empId = 29;
+--> changes a single row
+
+UPDATE Employee
+SET    deptId = 4
+WHERE  empName LIKE 'Da%';
+--> updates multiple rows at once
+
+UPDATE Employee
+SET    deptId = 3;
+--> change all department ID's to 3
+
+shortest statements in SQL cause the most row to change
+
+DELETE FROM
+
+DELETE FROM Employee
+WHERE  empId = 29;
+--> delete record of employee table with empId 29
+
+DELETE FROM Employee
+WHERE empName LIKE 'Da%';
+--> Delete all rows in the employee table whose empName
+    begins with letters "Da"
+
+DELETE FROM Employee;
+--> delete every employee in the table unless
+    they are a foreign key constraint to another table
+
+SELECT
+retrieves information from the database that matches the
+specified criteria
+SELECT/FROM/WHERE framework
+
+SELECT empName
+FROM   Employee
+WHERE  empId = 33;
+
+SELECT empName
+FROM   Employee;
+
+Query pulls information from or on more relations and
+temporarily creates a new relation
+
+Queries
+can create a new relation
+feed information into another query (subquery)
+resultset may no be in 3NF
+--> especially using JOIN statements
+
+Displaying Multiple Columns
+show values for two or more specific columns
+
+SELECT empId, empName
+FROM Employee;
+--> Displays empID and empName column from Employee Table
+
+Asterik
+Retrieves all the colunms of a specified table
+
+SELECT * FROM Employee;
+--> retrieve all the data from a data table
+
+DISTINCT
+supresses display of duplicate rows for SELECT statement
+
+SELECT DISTINCT deptId
+from Employee
+--> remove duplicate values of deptId in the table
+--> gets all the unique deptId's
+
+WHERE
+specifies the matching or filtering criteria for the rows
+that are to be displayed
+
+SELECT empName FROM Employee WHERE deptId = 15;
+
+can do WHERE clause comparison
+Equals =
+Not Equals <> or !=
+Greater than >
+Less than <
+Greater than or Euqal to >=
+Less than or equal to <=
+
+Compound Conditions
+Multiple matching criteria may be specified
+AND --> intersection of data sets
+OR --> union of the data sets
+
+Examples
+
+SELECT empName FROM Employee
+       WHERE deptId < 7 OR deptId > 12
+
+SELECT empName FROM Employee
+       WHERE deptId = 9 AND salaryCode <= 3
+
+IN Keyword
+specifies that a particular column value must match one
+of the values in a list from the WHERE clause
+--> more convenient than a series of "OR" operators
+
+SELECT empName FROM Employee
+       WHERE deptId IN (4, 8, 9);
+
+above statement is incomparison to
+
+       WHERE deptId = 4 OR deptId = 8 OR deptId = 9;
+
+NOT Operator
+Invert the filtering criteria
+--> returns all information except the information
+    matching the specified criteria
+
+SELECT empName FROM Employee
+       WHERE deptId NOT IN (4, 8, 9);
+
+
+BETWEEN keyword
+specify a minimum and maximum value on one line
+--> BETWEEN is inclusive
+
+SELECT empName FROM Employee
+       WHERE salaryCode BETWEEN 10 AND 45;
+--> inclusive: 10, 45 are both in the set as well
+
+Above is compared to:
+WHERE salaryCode >= 10 AND salaryCode <= 45;
+
+LIKE keyword
+allows for searches on partial data values
+
+wildcards: % --> find rows that partially match a string
+single character wildcard is an underscore: _
+
+Wildcard search examples
+
+SELECT empId
+FROM Employee
+WHERE empName LIKE 'Da%';
+
+SELECT empId
+FROM EMPLOYEE
+WHERE phone LIKE '657-0278-____';
+
+
+ORDER BY keyword
+retrieves information in a specific order
+
+SELECT *
+FROM Employee
+ORDER BY empName;
+--> order the retrieved results by employee name
+    --> ordered alphabetically
+
+Can do ascending or descending sort
+--> default is ascending sort
+
+ORDER BY empName ASC; --> ascending
+ORDER BY empName DESC; --> descending
+
+Useful SQL built-in numeric functions
+COUNT - counts # of rows matching specified criteria
+MIN - finds the minimum value for a specified column
+      for those rows matching the criteira
+MAX - finds the maximum value for a specified column
+      for those rows matching the criteria
+
+
+SUM - calculates the sum (total) for a specific column
+      for those rows matching the criteria
+AVG - calculates the numerical average (mean) of a
+      specific column for those rows matching the criteria
+STDEV - calculates the standard deviation of the values
+      	in a numeric column whose rows match criteria
+
+
+SELECT COUNT(*)
+FROM Employee;
+--> give the number of records in the Employee table
+
+SELECT MIN(hours) AS minimumHours,
+       MAX(hours) AS maximumHours,
+       AVG(hours) AS averageHours,
+FROM Project
+WHERE ProjID > 7;
+
+GROUP BY clause
+categorize result
+
+SELECT deptId,
+       COUNT(*) AS numberOfEmployees
+FROM Employee
+GROUP BY deptId;
+--> group together the results by the deptID
+--> sorts the deptId
+
+numberOfEmployees = alias
+--> this is a new function that shows up as a column
+    in the sql statement
+
+HAVING clause
+restricts GROUP BY on which categories are displayed
+
+HAVING SUM(saleAmount) >= 10000;
+
+serves same purpose for WHERE clause but used for
+GROUP BY clause
+
+Retrieving Information from Multiple Tables
+Subqueries
+result of a query is a relation
+results from one query may therefore be used as input
+for another query --> this is a subquery
+1) Noncorrelated subqueries
+2) Correlated subqueries
+
+Noncorrelated Subquery Example
+inner query only needs to run once in order for the
+database engine to solve the problem
+
+SELECT empName
+FROM Employee
+WHERE deptId IN
+      (SELECT deptId
+       FROM Department
+       WHERE deptName LIKE 'Account%');
+--> inner query = ones in parentheses
+    --> these get run once
+--> outer query = ones not in paranetheses
+
+
+Aliases
+
+SELECT empName
+FROM Employee e
+WHERE empSalary >
+      (SELECT AVG(empSalary)
+       FROM Employee
+       WHERE deptId = e.deptId);
+
+
+JOIN
+an alternative to combine data from multiple tables
+--> use this instead of subqueries
+
+Database Joins
+Outer Join
+      Left Outer Join
+      Full Outer Join
+      Right Outer Join
+Inner Join
+
+
+Ex.
+
+WHERE Clause Inner Join
+
+SELECT empName, deptName
+FROM Employee AS E, Department AS D
+WHERE E.deptId = D.deptId;
+
+SELECT empName, deptName
+FROM EMployee e INNER JOIN Department d
+     ON e.deptId = d.deptId
+WHERE d.deptName NOT LIKE 'Account%';
+
+OUTER JOIN syntax can be used to obtain data that exists
+in one table without matching data in the other table
+
+INNER JOIN - new set is created IF there are matched pairs
+      	     of valies in the tables joining
+
+SELECT empName, deptName
+FROM Employee e LEFT OUTER JOIN Department d
+     ON e.deptId = d.deptId;
+
+Employee table is named on the LEFT side
+Department table is named on the RIGHT side
+--> give me a list of all the Employees regardless of
+    matching department
+
+RIGHT OUTER JOIN
+Include all the data on the right table regardless if
+there is no matching department on the left table
+
+FULL OUTER JOIN
+Regardless of matching values, display all the colunms of
+the different tables being joined
+
+DROP keyword
+deleting database objects
+permnent remove the object and all of its associated data
+
+DROP TABLE Employee;
+
+DROP CONSTRAINT
+to remove an existing constraint:
+ALTER TABLE Employee DROP CONSTRAINT empFK;
+
+CHECK Constraint
+create restrictions on the values that are allowed to
+appear in a column
+
+ALTER TABLE Project
+      ADD CONSTRAINT projectCheckDates
+      	  CHECK (startDate < endDate)
+
+SQL View
+virtual table created by a DBMS-stored SELECT statement
+which can combine access to data in multiple tables
+and even in other views
+
+CREATE VIEW SalesDepartment AS
+SELECT *
+FROM Employee
+WHERE deptId = (SELECT deptId FROM Department WHERE
+      	        deptName = 'Sales');
+
+can run a query against a view in the same way that you
+run a query against a table
+
+SELECT empName FROM SalesDepartment;

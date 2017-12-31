@@ -1,0 +1,192 @@
+The Relational Model
+keys, foreign, surrogate keys
+function dependencies
+apply a process for normalizing relations -- normalization process
+
+Entity
+Something of importance to a user or organization that needs to be
+represented in a database
+reprsents one theme, topic, or business concept
+
+Entity-Relationship Model
+entities are restricted to things that can be represented using a single table
+
+Relation
+a two-dimensional table that has specific characteristics
+
+Characteristics of a Relation:
+rows contain data about instances of an entity
+columns contain data about attributes of the entity
+cells of the table hold a single value
+all values in a column are of the same kind (data type)
+each column has a unique name
+order of the columns is unimportant
+order of the rows is unimportant
+no two rows can be identical
+
+All relations are tables but not all tables are relations.
+
+Terminology
+Table = Relation = File (rarely)
+Row = Record = Tuple (rarely)
+Column = Field = Attribute
+
+Keys
+one or more columns of a relation whose values are used to identify a row
+
+Unique Key
+data value is unique for each row
+consequently, the key will uniquely identify a row
+
+Nonunique Key
+data value may be shared among several rows
+consequently, the key will identify a number of rows
+
+Database Keys
+Unique Keys
+       Candidate Key
+       Composite Key
+       Primary Key
+       Surrogate Key
+Nonunique Keys
+       Foreign Key
+
+Composite Key
+composed of two or more attributes/columns
+for a key to be unique, it must be a composite key
+Ex.
+Flying OC --> New
+Flight 34 - happens once every day
+Since it happens once everyday, we cannot use value 34 again for any other flights
+For uniqueness: Combine flight number with another value - e.g. Date
+Flight Number + Date = Unique
+
+Candidate Key
+candidate key has potential to become the primary key
+candidate key is unique key
+
+Primary Key
+candidate key chosen to be the main key for the relation
+knowing the value of the primary key, be able to uniquely identify a single row
+within the table
+
+Surrogate Key
+unique, numeric value that is added to a relation to serve as the primary key
+no meaning to users and are usually hidden on forms, queries, and reports
+surrogate key is often used in place of a composite primary key
+serves as a unique identifier
+
+Ex. Employee Number -- has no meaning outside the database
+
+Relationships Between Tables
+table may be related to other tables
+Ex. employee works in a department; manager controls a Project
+--> Use foreign keys
+
+Foreign Key
+establish relationships
+foreign key is a primary key from one table that is placed into another table
+the key is called a foreign key in the table that receives the key
+
+Ex.
+Project
+Project ID
+Project Name		Manager
+Manager ID	-->	Manager ID
+			Manager Name
+
+Referential Integrity
+every value of a foreign key must match a value of an existing primary key
+Order of insertion and deletions matter!!
+Ex. Permissions must be inserted first, then Group_Permissions with Permission ID
+    foreign key, then Group with its Group_Permission_ID foreign key, then the
+    User_Login user row with group foreign key.
+
+Null Values
+no data exists in a particular cell
+different from a zero, space character, empty string, etc
+
+Problem of Null Values
+often ambiguous:
+column value is not appropriate for the specific row
+OR column value has not been decided
+OR column value is unknown
+
+Functional Dependency
+A relationship between attributes in which one attribute (or group of attributes)
+determines the value of another attribute in the same table
+ex. Price of one delicious Girl Scout cookie can determine the price of
+    a box of 12 cookies
+
+(Cookie Price, Qty) --> Box Price
+--> Determinant
+
+Determinants
+Attribute (or attributes) that we use as the starting point
+
+Candidate/Primary Keys and Functional Dependency
+candidate key of a relation will functionally determine all other non-key attributes
+inthe row
+primary key of a relation will functionally determine all other non-key attributes
+in the row
+
+Data Normalization
+a process of analyzing a relation to ensure that it is well formed
+involves decomposing relations with anomolies to produce smaller, well-structured
+relations
+if a relation is normalized (well-formed), row scan be inserted, deleted, or
+modified without creating anomolies
+
+Well Formed
+Not susceptible to the three data anomolies:
+deletion anomalies, update anomalies, and insertion anomalies
+
+Normalization Principles
+1) To be a well-formed relation, every determinant must be a candidate key
+2) Any relation that is not well-formed should be broken into two or more
+well-formed relations
+
+As a general rule, a well-formed relation will not encompass more than one
+business concept
+
+Normalization Ex.
+Student ID --> Student Name, Dorm Name, Dorm Cost
+
+However, if...
+Dorm Name --> Dorm Cost
+
+Break relation apart into two relations:
+Student ID --> Student Name, Dorm Name
+Dorm Name --> Dorm Cost
+
+Normalization Steps
+1) Table with multi-valued attributes
+2) Remove multi-valued attributes
+3) First normal form (1NF)
+4) Remove partial dependencies
+5) Second normal form (2NF)
+6) Remove transitive dependencies
+7) Third normal form (3NF)
+
+First Normal Form
+Table contains no multi-valued attributes
+--> every attribute value is atomic
+--> A single value for each table cell
+All relations are in 1st normal form
+
+Second Normal Form
+table is in 1NF AND every non-key attribute is fully functionally dependent
+on the entire primary key
+every non-key attribute must be defined by the entire key, not by only part
+of the key
+no partial dependencies
+
+Third Normal Form
+table is in 2NF AND no transitive dependencies (functional dependencies on
+non-primary-key attributes)
+--> such dependencies are called transitive because the primary key is a
+    determinant for another attribute, which in turn is a determinant for
+    a third
+Solution: Non-key determinant with transitive dependencies goes into a new
+	  table; non-key determinant becomes primary key in the new table
+	  and remains as a foreign key in the old table
