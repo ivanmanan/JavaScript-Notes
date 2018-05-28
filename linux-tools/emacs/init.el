@@ -455,7 +455,7 @@ With argument, do this that many times."
                     :foreground "blue")
 (set-face-attribute 'ido-only-match nil
                     :background nil
-                    :foreground "green")
+                    :foreground "medium sea green")
 
 ;; Future installment: Emacs should detect when it is sunset or sunrise so as to
 ;; automatically swap between adwaita and manoj-dark themes
