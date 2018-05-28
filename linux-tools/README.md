@@ -29,3 +29,9 @@ $ sudo apt-get update
 4. Install Spotify
 
 $ sudo apt-get install spotify-client
+
+## Remove minimize, maximize, and close buttons from Windows applications
+$ gsettings set org.gnome.desktop.wm.preferences button-layout :
+
+To undo:
+$ gsettings reset org.gnome.desktop.wm.preferences button-layout
