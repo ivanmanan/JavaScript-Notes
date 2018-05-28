@@ -54,15 +54,9 @@ Alternate Tab - ON - Present windows as: Thumbnail and application icon; Show on
 
 Desktop Scroller - ON - Wallpaper Scrolling: ON; Enabled Edges: LEFT, RIGHT, TOP
 
-Dropdown Terminal - ON
+Drop Down Terminal - ON
 
 Hide Top Bar - ON - Only change Keyboard Shortcuts - key that triggers the bar to be shown: _Super+E_; Pressing the shortcut again rehides the panel: ON
-
-Native Window Placement: ON
-
-No topleft hot corner: ON
-
-Removable Drive Menu: ON
 
 Top Panel workspace scroll: ON
 
