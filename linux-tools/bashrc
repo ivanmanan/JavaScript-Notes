@@ -137,3 +137,5 @@ alias raspberry='rdesktop -g 1440x840 -u "ivan" 169.232.121.25'
 alias lnxraspberry='ssh ivan@192.168.0.50'
 alias battery="acpi"
 alias grave='echo -n "\`" | xclip -selection clipboard'
+alias disk="df -h /dev/nvme0n1p7"
+
