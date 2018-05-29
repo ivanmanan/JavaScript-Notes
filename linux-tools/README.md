@@ -1,6 +1,9 @@
 # Linux-Tools
 Everyday working tools I use to setup my Linux environment.
 
+## Grub Bootloader
+View the `grub` file to see the resolution size and color.
+
 ## Gnome Settings
 View gnome.md
 
