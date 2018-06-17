@@ -29,6 +29,7 @@ $ echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sou
 
 $ sudo apt-get update
 
+
 4. Install Spotify
 
 $ sudo apt-get install spotify-client
@@ -38,3 +39,9 @@ $ gsettings set org.gnome.desktop.wm.preferences button-layout :
 
 To undo:
 $ gsettings reset org.gnome.desktop.wm.preferences button-layout
+
+## Multi-finger Gestures
+1. Copy config.yml file into ~/.config/fusumua/config.yml
+
+2. Open ~/.profile and at the end of the file, place the command:
+   $ fusumua > /dev/null
