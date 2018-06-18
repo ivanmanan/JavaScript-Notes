@@ -43,5 +43,7 @@ $ gsettings reset org.gnome.desktop.wm.preferences button-layout
 ## Multi-finger Gestures
 1. Copy config.yml file into ~/.config/fusumua/config.yml
 
-2. Open ~/.profile and at the end of the file, place the command:
-   $ fusumua > /dev/null
+2. Run the command
+   $ sudo fusuma > /dev/null
+
+3. Note: Cannot run this command at startup because errors occur currently.
