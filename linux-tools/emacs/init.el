@@ -6,6 +6,11 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 
+;; Change color of minibuffer
+(custom-set-faces
+ '(comint-highlight-prompt ((t (:foreground "darkviolet"))))
+ '(minibuffer-prompt ((t (:foreground "black")))))
+
 (defvar js2-indent 2)
 (defvar web-mode-indent 2) ;; this includes jsx
 (defvar sql-indent 4)
@@ -156,6 +161,12 @@
 (require 'org)
 (add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
 (setq auto-indent-start-org t)
+
+;; winner mode
+;; resets windows configuration, such as split screens
+;; Press C-c left or C-c right
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
 
 ;; ido
 (require 'ido)
@@ -455,11 +466,6 @@ With argument, do this that many times."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Adwaita Themed Colors - comment when not using Adwaita
 (add-hook 'after-init-hook (lambda () (load-theme 'adwaita)))
-
-;; Change color of minibuffer
-(custom-set-faces
- '(comint-highlight-prompt ((t (:foreground "darkviolet"))))
- '(minibuffer-prompt ((t (:foreground "black")))))
 
 (set-face-attribute 'ido-first-match nil
                     :background nil
