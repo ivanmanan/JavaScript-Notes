@@ -124,18 +124,12 @@ alias open='xdg-open'
 alias emacs='emacs &'
 alias chromium='chromium-browser &'
 alias ram='free -m'
-# alias spotify='/usr/bin/spotify --force-device-scale-factor=1.75 &'
 alias spotify='spotify --force-device-scale-factor=1.75 &'
 alias google-chrome='google-chrome &'
 alias react='create-react-app'
-alias read='evince'
 alias g11='g++ -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -fsanitize=bounds -std=c++11 -Wall -Wextra -Wno-sign-compare -Werror=return-type -pedantic'
-alias seasnet='rdesktop -g 90% -u "seaslab\manan" remote.seas.ucla.edu'
-alias lnxsrv07='ssh manan@lnxsrv07.seas.ucla.edu'
-alias open='xdg-open'
 alias raspberry='rdesktop -g 1440x840 -u "ivan" 169.232.121.25'
 alias lnxraspberry='ssh ivan@192.168.0.50'
 alias battery="acpi"
 alias grave='echo -n "\`" | xclip -selection clipboard'
 alias disk="df -h /dev/nvme0n1p7"
-
