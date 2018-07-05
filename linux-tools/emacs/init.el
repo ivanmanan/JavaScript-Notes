@@ -6,11 +6,6 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 2)
 
-;; Change color of minibuffer
-(custom-set-faces
- '(comint-highlight-prompt ((t (:foreground "darkviolet"))))
- '(minibuffer-prompt ((t (:foreground "black")))))
-
 (defvar js2-indent 2)
 (defvar web-mode-indent 2) ;; this includes jsx
 (defvar sql-indent 4)
@@ -37,10 +32,6 @@
 (tooltip-mode nil)
 (setq inhibit-startup-message t)
 (setq inhibit-startup-echo-area-message "Ivan Manan")
-
-;; Every new frame will be maximized
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Every minibuffer will be split vertically
 (setq split-height-threshold nil)
@@ -73,6 +64,10 @@
 (setq inhibit-startup-buffer-menu t)
 
 (defalias 'yes-or-no-p #'y-or-n-p) ; switches yes-no to y-n
+
+;; Every new frame will be maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; matching parentheses
 (setq show-paren-delay 0)
@@ -293,6 +288,10 @@
 ;; I would like to be able to jump to variable/function definitions in C++
 ;; As of now, I can only do this in Javascript with Tern-mode key binding M-.
 
+;; tramp-mode
+(require 'tramp)
+(setq tramp-default-method "ssh")
+
 ;; diminish
 ;; hide minor modes in mode line
 (require 'diminish)
@@ -424,6 +423,9 @@ With argument, do this that many times."
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (setq web-mode-enable-auto-pairing t) ; auto-pairing
 (setq web-mode-enable-css-colorization t) ; css colorization
+(setq web-mode-enable-current-element-highlight t) ; highlight HTML tags
+(set-face-attribute 'web-mode-current-element-highlight-face nil
+                    :background "cyan")
 
 ;; json run in web-mode
 (add-to-list 'auto-mode-alist '("\\.json\\'" . web-mode))
@@ -506,3 +508,4 @@ With argument, do this that many times."
 (desktop-save-mode 1) ; save emacs desktop session
 (server-start)
 (setq server-socket-dir "~/.emacs.d/server")
+
