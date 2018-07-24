@@ -9,7 +9,7 @@ Read - querying
 Update
 Delete
 
-Relational database -- display relationship/heirarchy
+Relational database -- display relationship/hierarchy
 
 Problems with lists
 Redundancy - duplicate entries in lists
@@ -83,7 +83,7 @@ maintain database structures
 enforce rules
 control concurrency
 provide security
-perofrm data backup and recovery
+perform data backup and recovery
 
 Referential Integrity Constraints
 DBMS can enforce many constraints

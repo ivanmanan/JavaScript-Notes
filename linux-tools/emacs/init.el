@@ -1,4 +1,4 @@
-;;; Emacs Initialize Configuration
+;;; init.el
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22,7 +22,7 @@
 (menu-bar-mode -1)
 (display-time-mode 1) ; display time
 (display-battery-mode 1) ; display batter
-;; (set-scroll-bar-mode 'right) ; scroll bar does not appear properly in 1440p
+;;(set-scroll-bar-mode 'right) ; scroll bar does not appear properly in 1440p
 (scroll-bar-mode -1) ; disable scrollbar on all frames
 (toggle-scroll-bar -1) ; disable scrollbar
 (setq use-dialog-box nil) ; disable pop-up dialog boxes
@@ -79,12 +79,12 @@
     the syntax class ')'."
   (interactive)
   (let* (
-	 (cb (char-before (point)))
+         (cb (char-before (point)))
          (matching-text (and cb
                              (char-equal (char-syntax cb) ?\) )
                              (blink-matching-open)
-			     )
-			)
+                             )
+                        )
          )))
 
 ;; delete all trailing whitespaces
@@ -151,12 +151,6 @@
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
-;; org-mode
-(setq inhibit-splash-screen t)
-(require 'org)
-(add-hook 'org-mode-hook (lambda () (org-autolist-mode)))
-(setq auto-indent-start-org t)
-
 ;; winner mode
 ;; resets windows configuration, such as split screens
 ;; Press C-c left or C-c right
@@ -210,12 +204,6 @@
 ;; M-. -- goes to function declaration
 ;(require 'tern)
 
-;; web-beautify - formats JS, CSS, and HTML files
-;; $ sudo npm -g install js-beautify
-;; more customizations available:
-;; https://github.com/yasuyk/web-beautify
-(require 'web-beautify)
-
 ;; (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
 ;; (eval-after-load 'tern
 ;;    '(progn
@@ -262,10 +250,6 @@
 ;; M-x undo-tree-visualize: displays undo tree
 (require 'undo-tree)
 (global-undo-tree-mode t)
-
-;; neotree
-(require 'neotree)
-(setq neo-smart-open t)
 
 ;; swiper
 (require 'swiper)
@@ -324,21 +308,14 @@
 (global-set-key (kbd "M-v") (lambda () (interactive) (scroll-down 8)))
                               ;(end-of-buffer (goto-char (point-max)))))
 
-;; C-k kill entire line no matter point position
-;; combo: <RET>, then C-k
-;;(global-set-key (kbd "C-k") 'kill-whole-line)
-
 ;; Disable <Insert> button
 (global-set-key (kbd "<insert>") nil)
 
 ;; C-x k asks to kill all buffers
 (global-set-key (kbd "C-x k") 'kill-some-buffers)
 
-;; Do not copy into clipboard
-;;(global-set-key (kbd "M-d") 'delete-word)
-
 ;; C-' open and close neotree
-(global-set-key (kbd "C-'") 'neotree-toggle)
+(global-set-key (kbd "C-'") 'dired-other-window)
 
 ;; C-<TAB> as switch between windows
 (global-set-key (kbd "C-<tab>") 'other-window)
@@ -347,7 +324,7 @@
 (global-set-key (kbd "C-r") 'swiper)
 
 (global-set-key (kbd "M-m") 'compile)
-(global-set-key (kbd "M-s") 'shell) ; shell could be replaced with term
+(global-set-key (kbd "M-s") 'shell)
 
 ;; C-; as comment whole line
 (global-set-key (kbd "C-;") 'comment-line)
@@ -358,6 +335,9 @@
 
 ;; C-x g magit-status
 (global-set-key (kbd "C-x g") 'magit-status)
+
+;; C-q disabled
+(global-unset-key (kbd "C-q"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -387,7 +367,7 @@ With argument, do this that many times."
 
 (global-set-key (read-kbd-macro "M-<DEL>") 'backward-delete-word)
 (global-set-key (read-kbd-macro "M-d") 'delete-word)
-(global-set-key (kbd "C-k") #'delete-whole-line)
+(global-set-key (kbd "C-k") 'delete-whole-line)
 
 ;; backward-delete-word works for ido mode
 (add-hook 'ido-setup-hook
@@ -466,7 +446,7 @@ With argument, do this that many times."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Adwaita Themed Colors - comment when not using Adwaita
+;;; Adwaita Themed Colors
 (add-hook 'after-init-hook (lambda () (load-theme 'adwaita)))
 
 (set-face-attribute 'ido-first-match nil
@@ -478,34 +458,16 @@ With argument, do this that many times."
                     :background nil
                     :foreground "medium sea green")
 
-;; Future installment: Emacs should detect when it is sunset or sunrise so as to
-;; automatically swap between adwaita and manoj-dark themes
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Manoj Dark - comment when not using Manoj Dark
-;; Load theme
-;; (add-hook 'after-init-hook (lambda () (load-theme 'manoj-dark)))
-
-;; Change color of minibuffer
-;; (custom-set-faces
-;;  '(comint-highlight-prompt ((t (:foreground "green"))))
-;;  '(minibuffer-prompt ((t (:foreground "cyan")))))
-
-;; Find file minibuffer
-;; (set-face-attribute 'ido-first-match nil
-;;                     :background nil
-;;                     :foreground "orange")
-;; (set-face-attribute 'ido-subdir nil
-;;                     :foreground "#00C3FF")
-;; (set-face-attribute 'ido-only-match nil
-;;                     :background nil
-;;                     :foreground "yellow")
+;; To find list of faces, use:
+;; M-x list-faces-display
+(set-face-attribute 'minibuffer-prompt nil
+                    :foreground "black")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Emacs Server
 (desktop-save-mode 1) ; save emacs desktop session
 (server-start)
-(setq server-socket-dir "~/.emacs.d/server")
+
+;;; init.el ends here
 
