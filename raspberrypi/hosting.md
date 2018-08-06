@@ -22,3 +22,6 @@
    1. Type: A Record | Host: www | Value: xxx.xx.xx.x | TTL: 30 min
    2. Type: URL Redirect Record | Host: @ | Value: http://xxx.xx.xx.x:PORt |
       Masked | Meta
+
+# Hosting on Digital Ocean
+Must enable pm2, which runs the Node.js application in the background.
