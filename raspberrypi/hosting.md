@@ -3,6 +3,9 @@
 1. Register domain on Namecheap.com.
 
 2. Configure 'ufw' firewall to enable exceptions to your port.
+   ```bash
+   sudo ufw allow PORT_NUMBER
+   ```
 
 3. Run this command to extract public IP address.
    ```bash
