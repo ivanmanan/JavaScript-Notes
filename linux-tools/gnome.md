@@ -20,7 +20,7 @@ Chromium - Alt+g - _chromium_
 ### At Details:
 Device name: thinkpad
 
-Default Applications: Chromium, Audacious
+Default Applications: Chromium
 
 ## gnome-tweak-tool
 ### Gnome Extensions:
@@ -59,11 +59,3 @@ Drop Down Terminal - ON
 Hide Top Bar - ON - Only change Keyboard Shortcuts - key that triggers the bar to be shown: _Super+E_; Pressing the shortcut again rehides the panel: ON
 
 Top Panel workspace scroll: ON
-
-## dconf-editor
-### Save gnome-sessions:
-/org/gnome/gnome-session/
-
-open up auto-save-session
-
-change value to true

@@ -1,4 +1,7 @@
-# Setting Up Express Stack
+# Setting Up Express.js + React.js
+See repository React-Setup.
+
+# Setting Up Express.js
 
 ## Initialize Express
 $ npm install express --save
