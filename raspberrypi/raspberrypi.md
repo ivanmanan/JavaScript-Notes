@@ -1,5 +1,9 @@
 # Setting Up Raspberry Pi
 
+This guide explains how to setup a headless Raspberry Pi. In other
+words, it is setting up the Raspberry Pi without a monitor, mouse,
+nor keyboard.
+
 ## Contents
 * Install OS
 * Enable ssh
@@ -13,6 +17,15 @@
 2. Install [Raspbian OS](http://downloads.raspberrypi.org/raspbian_lite/images/).
 
 3. Flash OS to SD card using [Etcher](https://etcher.io/).
+
+
+### Enable Wi-Fi on Rasberry Pi
+
+1. Type command `sudo raspi-config`. Go to `Localisation Options`
+   and select the US.
+
+2.
+
 
 ### Enable ssh
 
@@ -89,4 +102,23 @@
 
 2. Add commands before 'exit 0'.
 
+### Transfer Files via ssh
 
+1. Obtain IP address of Raspberry Pi.
+
+2. Run the below command on the server.
+   ```bash
+   scp FILE_NAME 192.168.0.xx:/home/user
+   ```
+
+### Playing Audio Files on Raspberry Pi
+
+1. Install `omxplayer`.
+   ```bash
+   sudo apt install omxplayer
+   ```
+
+2. Play the file using sudo.
+   ```bash
+
+   ```
