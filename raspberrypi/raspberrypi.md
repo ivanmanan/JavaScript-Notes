@@ -14,7 +14,7 @@ nor keyboard.
 ### Install OS
 1. Connect microSD card with card reader onto the laptop.
 
-2. Install [Raspbian OS](http://downloads.raspberrypi.org/raspbian_lite/images/).
+2. Install [Raspbian OS](http://downloads.raspberrypi.org/raspbian_lite/images/). Use Jesse instead of Stretch for MySQL instead of MariaDB.
 
 3. Flash OS to SD card using [Etcher](https://etcher.io/).
 
