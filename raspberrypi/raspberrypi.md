@@ -24,8 +24,71 @@ nor keyboard.
 1. Type command `sudo raspi-config`. Go to `Localisation Options`
    and select the US.
 
-2.
+2. Enter the SD card directory.
+   ```bash
+   cd /media/user/boot/
+   ```
 
+3. Edit the `wpa_supplicant.conf` file in the `boot` directory. Note
+   that this copies `wpa_supplicant.conf` into
+   `/etc/wpa_supplicant/wpa_supplicant.conf` on the Raspberry Pi.
+   ```bash
+   sudo nano wpa_supplicant.conf
+   ```
+
+
+4. Specify the Wi-Fi network to connect to by adding this content into
+   the file.
+   ```bash
+   ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+   update_config=1
+   country=US
+   network={
+       ssid="Wi-Fi Name"
+       psk="Password to Wi-Fi"
+       key_mgmt=WPA-PSK
+   }
+   ```
+
+5. If the Wi-Fi connection initially does not work, then `ssh` to
+   the Raspberry Pi via Ethernet. The Wi-Fi does not work because
+   the Raspberry Pi may be restricted to connect to that specific
+   network. It seems like the Raspberry Pi is unable to connect to
+   5G networks.
+
+6. When on the Raspberry Pi via command line, enter this command to
+   view available networks to connect to.
+   ```bash
+   sudo iwlist wlan0 scan
+   ```
+
+7. To add priority Wi-Fi connections, copy and paste this content
+   into the `/etc/wpa_supplicant/wpa_supplicant.conf` file. This is
+   useful if you have to connect to the college campus Wi-Fi at
+   times. Do note that the machine you `ssh` into must be on the
+   same network as you.
+   ```bash
+   network={
+       ssid="HomeOneSSID"
+       psk="passwordOne"
+       priority=1
+       id_str="homeOne"
+   }
+
+    network={
+        ssid="HomeTwoSSID"
+        psk="passwordTwo"
+        priority=2
+        id_str="homeTwo"
+    }
+   ```
+
+8. If you do not know the IP address of the Raspberry Pi, you can
+   ping it as long as it is on the same Wi-Fi network as your
+   laptop.
+      ```bash
+   ping raspberrypi.local
+   ```
 
 ### Enable ssh
 
@@ -116,9 +179,32 @@ nor keyboard.
 1. Install `omxplayer`.
    ```bash
    sudo apt install omxplayer
+   sudo usermod -a -G video $(whoami)
    ```
 
-2. Play the file using sudo.
+2. Play the file.
    ```bash
+   omxplayer FILE_NAME.mp3
+   ```
 
+3. Display all key options during playback.
+   ```bash
+   omxplayer --keys
+   ```
+
+### Change Hostname of the Raspberry Pi
+
+1. Edit the hostname file.
+   ```bash
+   sudo nano /etc/hostname
+   ```
+
+2. Also update the hostname in this other file.
+   ```bash
+   sudo nano /etc/hosts
+   ```
+
+3. Now attempt to `ping` the new hostname.
+   ```bash
+   ping NEW_HOST_NAME.local
    ```
