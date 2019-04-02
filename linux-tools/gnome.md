@@ -63,3 +63,8 @@ Drop Down Terminal - ON
 Hide Top Bar - ON - Only change Keyboard Shortcuts - key that triggers the bar to be shown: _Super+E_; Pressing the shortcut again rehides the panel: ON
 
 Top Panel workspace scroll: ON
+
+
+## Removing Ubuntu Side Dock
+_sudo apt install dconf-tools_
+Navigate org->gnome->shell->extensions->dash-to-dock and set **autohide** to **off**.
