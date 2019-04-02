@@ -58,11 +58,18 @@ Alternate Tab - ON - Present windows as: Thumbnail and application icon; Show on
 
 Desktop Scroller - ON - Wallpaper Scrolling: ON; Enabled Edges: LEFT, RIGHT, TOP
 
-Drop Down Terminal - ON
-
 Hide Top Bar - ON - Only change Keyboard Shortcuts - key that triggers the bar to be shown: _Super+E_; Pressing the shortcut again rehides the panel: ON
 
 Top Panel workspace scroll: ON
+
+
+## Installing Drop Down Terminal
+```bash
+sudo apt install guake
+# used to enable the 'exit' command in guake
+sudo apt install --reinstall libutempter0
+```
+Open up Guake Preferences and adjust as needed.
 
 
 ## Removing Ubuntu Side Dock
