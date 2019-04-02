@@ -1,7 +1,7 @@
 # Gnome Settings
-Hotkeys: _Alt+F2_
+Hotkeys: _Alt+F2_ then type _r_
 
-## Persisnt Mouse Cursor Size
+## Persistent Mouse Cursor Size
 _gsettings set org.gnome.desktop.interface cursor-size 48_
 
 ## gnome-control-center
