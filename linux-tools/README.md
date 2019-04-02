@@ -47,3 +47,10 @@ $ gsettings reset org.gnome.desktop.wm.preferences button-layout
    $ sudo fusuma > /dev/null
 
 3. Note: Cannot run this command at startup because errors occur currently.
+
+## Remove Nautilus File Manager's Bookmark Default Folders
+Comment out the lines of the folders you want to hide in the following files:
+```bash
+~/.config/user-dirs.dirs
+/etc/xdg/user-dirs.defaults
+```
