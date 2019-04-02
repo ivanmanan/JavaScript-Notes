@@ -52,6 +52,8 @@ Workspace Creation: Dynamic
 Workspaces only on primary display: ON
 
 ### Extensions:
+Dash to dock - ON - Used to override the `Super+Q` hotkey
+
 Hide activities button - ON
 
 No Topleft Hot Corner - ON
