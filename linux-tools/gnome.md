@@ -54,6 +54,8 @@ Workspaces only on primary display: ON
 ### Extensions:
 Hide activities button - ON
 
+No Topleft Hot Corner - ON
+
 Alternate Tab - ON - Present windows as: Thumbnail and application icon; Show only windows in the current workspace
 
 Desktop Scroller - ON - Wallpaper Scrolling: ON; Enabled Edges: LEFT, RIGHT, TOP
