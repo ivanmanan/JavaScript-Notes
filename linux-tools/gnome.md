@@ -52,7 +52,7 @@ Workspace Creation: Dynamic
 Workspaces only on primary display: ON
 
 ### Extensions:
-Activities Configurator - Turn these ON: Hide Icon, Remove Activities Button, Disable Hot Corner, Hide Panel Rounded Corners, Hide Application Menu Button Icon
+Hide activities button - ON
 
 Alternate Tab - ON - Present windows as: Thumbnail and application icon; Show only windows in the current workspace
 
