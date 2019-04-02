@@ -1,5 +1,9 @@
 # Gnome Settings
 Hotkeys: _Alt+F2_
+
+## Persisnt Mouse Cursor Size
+_gsettings set org.gnome.desktop.interface cursor-size 48_
+
 ## gnome-control-center
 ### At Default Keyboard:
 Move to workspace above: _Super+Q_
@@ -15,7 +19,7 @@ Next Spotify Song - F12 - _dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 
 Terminal - Alt+t - _terminator_
 
-Chromium - Alt+g - _chromium_
+Chromium - Alt+g - _chromium-browser_
 
 ### At Details:
 Device name: thinkpad
