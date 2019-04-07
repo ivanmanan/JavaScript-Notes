@@ -10,6 +10,10 @@ Move to workspace above: _Super+Q_
 
 Move to workspace below: _Super+W_
 
+Copy a screenshot of an area to clipboard: _Print_
+
+Save a screenshot of an area to Pictures: _Shift+Print_
+
 ### At Custom Keyboard:
 Pause Spotify Song - F10 - _dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause_
 
