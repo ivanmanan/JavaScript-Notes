@@ -134,5 +134,7 @@ alias battery="acpi"
 alias grave='echo -n "\`" | xclip -selection clipboard'
 alias disk="df -h /dev/nvme0n1p7"
 
-. ~/.bash_profile
+# NOTE: Need to change directory path name on different computers
+export PATH="$PATH:/home/ivan/mobile/android-studio/bin"
+export PATH="$PATH:/home/ivan/mobile/flutter/bin"
 
